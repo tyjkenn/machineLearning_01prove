@@ -5,7 +5,7 @@ from sklearn.naive_bayes import GaussianNB
 import csv
 
 # possible types mapped to numbers
-irisValues = {'Iris-setosa': 0, 'Iris-versicolor': 1, 'Iris-virginica': 2}
+irisValues = {}
 
 path = input("Path to CSV file: ")
 if (path == ""):
@@ -27,6 +27,8 @@ else:
                 rowVals.append(float(row[2]))
                 rowVals.append(float(row[3]))
                 data.append(rowVals)
+                if row[4] not in irisValues:
+                    irisValues[row[4]] = len(irisValues)
                 target.append(irisValues[row[4]])
 
 
