@@ -4,31 +4,30 @@ from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from kneighbors import KNeighbors
+from hardcoded import HardCodedClassifier
 import csv
 
 # possible types mapped to numbers
 irisValues = {}
 
-# "predicts" setosa every time
-class HardCodedModel:
-    def predict(self, data):
-        result = []
-        for datum in data:
-            result.append(0)
-        return result
 
-
-class HardCodedClassifier:
-    def fit(self, data, target):
-        return HardCodedModel()
-
-path = input("Path to CSV file (keep blank for default iris data): ")
-if (path == ""):
-    # default to using the datasets
-    iris = datasets.load_digits()
-    data = iris.data
-    target = iris.target
+useSklearn = input("Will you use one of sklearn's data sets?(y/n)")
+if useSklearn == "y" or useSklearn == "Y":
+    print("Choose one of the following:")
+    print("0 : Iris")
+    print("1 : Wine")
+    print("2 : Digits")
+    option = int(input(">"))
+    if option == 0:
+        dataset = datasets.load_iris()
+    elif option == 1:
+        dataset = datasets.load_wine()
+    else:
+        dataset = datasets.load_digits()
+    data = dataset.data
+    target = dataset.target
 else:
+    path = input("Path to CSV file: ")
     # read the csv file and populate the data and target
     with open(path) as file:
         csvRead = csv.reader(file, delimiter=',')
