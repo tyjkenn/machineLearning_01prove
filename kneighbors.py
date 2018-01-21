@@ -1,13 +1,21 @@
 import numpy
-import statistics
 from collections import Counter
 
+'''
+Finds the Euclidean distance squared between two points
+of the same dimension. It is squared because square rooting
+is pointless for our purposes.
+'''
 def sqrdist(a, b):
     distance = 0;
     for i in range(len(a)):
         distance += (a[i] - b[i])**2
     return distance
 
+'''
+Finds the most common thing in a list of options.
+If there is a tie, the decision is arbitrary
+'''
 def findMode(options):
     c = Counter(options)
     return c.most_common(1)[0][0]
@@ -18,6 +26,9 @@ class KNeighborsModel:
             k = int(input("Choose a number for K:"))
         self.targets = target
         self.k = k
+
+        # find the means and standard deviations of each row
+        # for normalizations
         self.stds = []
         self.means = []
         cols = zip(*data)
