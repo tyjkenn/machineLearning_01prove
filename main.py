@@ -14,7 +14,8 @@ irisValues = {}
 
 preprocessors = [
     [0, "Car Evaluation", preprocessor.car_eval],
-    [1, "Diabetes", preprocessor.diabetes]
+    [1, "Diabetes", preprocessor.diabetes],
+    [2, "Mile Per Gallon", preprocessor.mpg]
 ]
 
 classifiers = [
