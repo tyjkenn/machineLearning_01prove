@@ -5,10 +5,24 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from kneighbors import KNeighbors
 from hardcoded import HardCodedClassifier
+import numpy as np
 import csv
+import preprocessor
 
 # possible types mapped to numbers
 irisValues = {}
+
+preprocessors = [
+    [0, "Car Evaluation", preprocessor.car_eval],
+    [1, "Diabetes", preprocessor.diabetes]
+]
+
+classifiers = [
+    [0, "Gaussian NB", GaussianNB],
+    [1, "Hard Coded", HardCodedClassifier],
+    [2, "K-Nearest Neighbors", KNeighbors],
+    [3, "Built-in K-Nearerst Neighbors", KNeighborsClassifier]
+]
 
 
 useSklearn = input("Will you use one of sklearn's data sets?(y/n)")
@@ -28,33 +42,15 @@ if useSklearn == "y" or useSklearn == "Y":
     target = dataset.target
 else:
     path = input("Path to CSV file: ")
-    # read the csv file and populate the data and target
-    with open(path) as file:
-        csvRead = csv.reader(file, delimiter=',')
-        data = []
-        target = []
-        for row in csvRead:
-            if (len(row) == 5):
-                rowVals = []
-                rowVals.append(float(row[0]))
-                rowVals.append(float(row[1]))
-                rowVals.append(float(row[2]))
-                rowVals.append(float(row[3]))
-                data.append(rowVals)
-                if row[4] not in irisValues:
-                    irisValues[row[4]] = len(irisValues)
-                target.append(irisValues[row[4]])
+    print("Choose a preprocessor:")
+    for key, name, preproc in preprocessors:
+        print("\t{} : {}".format(key, name))
+    preprocKey = int(input(">"))
+    data, target = preprocessors[preprocKey][2](path)
 
 
-#split into training and test sets
+# split into training and test sets
 data_train, data_test, target_train, target_test = train_test_split(data, target, test_size=.3, train_size=.7, shuffle=True)
-
-classifiers = [
-    [0, "Gaussian NB", GaussianNB],
-    [1, "Hard Coded", HardCodedClassifier],
-    [2, "K-Nearest Neighbors", KNeighbors],
-    [3, "Built-in K-Nearerst Neighbors", KNeighborsClassifier]
-]
 
 print("Choose a classifier:")
 for key, name, classifier in classifiers:
@@ -62,8 +58,6 @@ for key, name, classifier in classifiers:
 classKey = int(input(">"))
 
 
-
-# Use Gaussian NB to predict
 classifier = classifiers[classKey][2]()
 model = classifier.fit(data_train, target_train)
 targets_predicted = model.predict(data_test)
