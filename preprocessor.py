@@ -1,21 +1,22 @@
 import pandas as pd
 import numpy as np
 
+
 def order_strings(column, order):
     column[:] = [order.index(x) for x in column]
     return column
+
 
 def car_eval(filename):
     data = pd.read_csv(filename, dtype=None,
                          names=["buying", "maint", "doors", "persons", "lug_boot", "safety", "class"],
                          sep=',', skipinitialspace=True)
-    data["buying"] = data["buying"].astype('category').cat.codes
-    data["maint"] = data["maint"].astype('category').cat.codes
-    data["doors"] = data["doors"].astype('category').cat.codes
-    data["persons"] = data["persons"].astype('category').cat.codes
-    data["lug_boot"] = data["lug_boot"].astype('category').cat.codes
-    data["safety"] = data["safety"].astype('category').cat.codes
-    data["class"] = data["class"].astype('category').cat.codes
+    data = data.replace({'buying': {'vhigh': 0, 'high': 1, 'med': 2, 'low': 3},
+                         'maint': {'vhigh': 0, 'high': 1, 'med': 2, 'low': 3},
+                         'doors': {'5more': 5},
+                         'persons': {'more': 5},
+                         'lug_boot': {'small': 0, 'med': 1, 'big': 2},
+                         'safety': {'low': 0, 'med': 1, 'high': 2}})
     target = data["class"]
     data = data.drop("class", axis=1)
     return data.values, target.values
