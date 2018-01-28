@@ -20,16 +20,26 @@ def car_eval(filename):
     data = data.drop("class", axis=1)
     return data.values, target.values
 
+
 def diabetes(filename):
     data = pd.read_csv(filename, dtype=None,
                        names=["timesPreg", "plasmaGlucose", "bloodPress", "skinThick", "serum", "bmi", "pedigree", "age", "class"],
-                       sep=',', skipinitialspace=True)
+                       sep=',', skipinitialspace=True, )
     data[["plasmaGlucose", "bloodPress", "skinThick", "serum", "bmi", "pedigree", "age"]] = data[["plasmaGlucose", "bloodPress", "skinThick", "serum", "bmi", "pedigree", "age"]].replace(0, np.NaN)
     data.fillna(data.mean(), inplace=True)
     target = data["class"]
     data = data.drop("class", axis=1)
-    print(data.head())
     return data.values, target.values
 
-def mpg(csv):
-    pass
+
+def mpg(filename):
+    data = pd.read_csv(filename, dtype={'horsepower': np.float64}, na_values=["?"],
+                       names=["mpg", "cylinders", "displacement", "horsepower", "weight", "acceleration", "year",
+                              "origin", "name"],
+                       delim_whitespace=True)
+    data['horsepower'] = data['horsepower'].replace('?', np.nan)
+    data['horsepower'].fillna((data['horsepower'].mean()), inplace=True)
+    target = data["mpg"]
+    data = data.drop("mpg", axis=1)
+    data = data.drop("name", axis=1)
+    return data.values, target.values

@@ -1,12 +1,12 @@
-from sklearn import datasets
+from sklearn import datasets, linear_model
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LinearRegression
 from kneighbors import KNeighbors
 from hardcoded import HardCodedClassifier
-import numpy as np
-import csv
+from sklearn.model_selection import cross_val_score
 import preprocessor
 
 # possible types mapped to numbers
@@ -22,7 +22,8 @@ classifiers = [
     [0, "Gaussian NB", GaussianNB],
     [1, "Hard Coded", HardCodedClassifier],
     [2, "K-Nearest Neighbors", KNeighbors],
-    [3, "Built-in K-Nearerst Neighbors", KNeighborsClassifier]
+    [3, "Built-in K-Nearerst Neighbors", KNeighborsClassifier],
+    [4, "Linear Regression", LinearRegression]
 ]
 
 
@@ -58,9 +59,16 @@ for key, name, classifier in classifiers:
     print("\t{} : {}".format(key, name))
 classKey = int(input(">"))
 
-
 classifier = classifiers[classKey][2]()
 model = classifier.fit(data_train, target_train)
 targets_predicted = model.predict(data_test)
-score = accuracy_score(target_test, targets_predicted)
-print(classifiers[classKey][1] + " score: " + ("%.1f" % (score * 100)) + "%")
+
+if classKey == 4:
+    score = 0
+    for i in range(len(target_test)):
+        score += abs(target_test[i] - targets_predicted[i])
+    score /= len(target_test)
+    print("On average off by: " + str(score))
+else:
+    score = accuracy_score(target_test, targets_predicted)
+    print(classifiers[classKey][1] + " score: " + ("%.1f" % (score * 100)) + "%")
